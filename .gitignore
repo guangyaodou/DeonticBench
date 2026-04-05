@@ -1,0 +1,33 @@
+# Inference outputs (generated at runtime, not versioned)
+/outputs/
+/bootstrap_results/
+
+# Personal SLURM testing scripts (not for public release)
+/slurm/
+
+# Project-local Claude instructions
+CLAUDE.md
+.claude/
+
+# Paper / assets (not for public release)
+COLM2026_DeonticBench_arxiv.pdf
+assets/*.pdf
+
+# HuggingFace Hub upload script (internal use only)
+push_to_hub.py
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# OS / Editor
+.DS_Store
+*.swp
+*.swo

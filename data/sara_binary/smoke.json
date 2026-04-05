@@ -1,0 +1,37 @@
+[
+  {
+    "id": "s1_a_1_i_pos",
+    "text": "Alice is married under section 7703 for the year 2017. Alice files a joint return with her spouse for 2017. Alice's and her spouse's taxable income for the year 2017 is $17330.",
+    "question": "Alice and her spouse have to pay $2600 in taxes for the year 2017 under section 1(a)(i).",
+    "label": 1,
+    "reference_prolog": "/* ---------- Statutory rules (excerpts) ---------- */\n\n/* Tax computation under section 1(a) - married individuals filing joint returns and surviving spouses */\ntax_section_1a(TI, Tax) :-\n    ( TI =< 36900 ->\n        Tax is 0.15 * TI\n    ; TI =< 89150 ->\n        Tax is 5535 + 0.28 * (TI - 36900)\n    ; TI =< 140000 ->\n        Tax is 20165 + 0.31 * (TI - 89150)\n    ; TI =< 250000 ->\n        Tax is 35928.50 + 0.36 * (TI - 140000)\n    ;\n        Tax is 75528.50 + 0.396 * (TI - 250000)\n    ).\n\n/* ---------- Facts for the case ---------- */\n\ntaxable_income(alice, 17330).\nmarried_under_7703(alice).\nfiles_joint_return(alice).\n\n/* ---------- Derivation of Alice and spouse's tax liability ---------- */\n\nalice_and_spouse_tax(Tax) :-\n    taxable_income(alice, TI),\n    married_under_7703(alice),\n    files_joint_return(alice),\n    tax_section_1a(TI, Tax).\n\n/* ---------- Verification of the claim ---------- */\n\n:- (  alice_and_spouse_tax(Tax),\n      round(Tax, Rounded),\n      Rounded =:= 2600\n   -> format('Result: Entailment~n')\n   ;  format('Result: Contradiction~n')\n   ).\n:- halt."
+  },
+  {
+    "id": "s1_a_2_ii_neg",
+    "text": "Alice is a surviving spouse for the year 2017. Alice's taxable income for the year 2017 is $95129.",
+    "question": "Alice has to pay $22018 in taxes for the year 2017 under section 1(a)(ii).",
+    "label": 0,
+    "reference_prolog": "/* ---------- Statutory rules (excerpt) ---------- */\n\n/* Tax computation under section 1(a)(ii) \u2013 surviving spouse bracket */\ntax_section_1a_surviving_spouse(TI, Tax) :-\n    TI > 36900,\n    TI =< 89150,\n    Tax is 5535 + 0.28 * (TI - 36900).\n\n/* ---------- Facts for the case ---------- */\n\ntaxable_income(alice, 95129).\nsurviving_spouse(alice).\n\n/* ---------- Derivation of Alice's tax liability ---------- */\n\nalice_tax(Tax) :-\n    taxable_income(alice, TI),\n    surviving_spouse(alice),\n    tax_section_1a_surviving_spouse(TI, Tax).\n\n/* ---------- Verification of the claim ---------- */\n\n:- (  alice_tax(Tax),\n      round(Tax, Rounded),\n      Rounded =:= 22018\n   -> format('Result: Entailment~n')\n   ;  format('Result: Contradiction~n')\n   ).\n:- halt."
+  },
+  {
+    "id": "s1_a_2_iv_pos",
+    "text": "Alice is a surviving spouse for the year 2017. Alice's taxable income for the year 2017 is $236422.",
+    "question": "Alice has to pay $70640 in taxes for the year 2017 under section 1(a)(iv).",
+    "label": 1,
+    "reference_prolog": "/* ---------- Statutory rules (excerpts) ---------- */\n\n/* Tax computation under section 1(a) - surviving spouse */\ntax_section_1a(TI, Tax) :-\n    ( TI =< 36900 ->\n        Tax is 0.15 * TI\n    ; TI =< 89150 ->\n        Tax is 5535 + 0.28 * (TI - 36900)\n    ; TI =< 140000 ->\n        Tax is 20165 + 0.31 * (TI - 89150)\n    ; TI =< 250000 ->\n        Tax is 35928.50 + 0.36 * (TI - 140000)\n    ;\n        Tax is 75528.50 + 0.396 * (TI - 250000)\n    ).\n\n/* ---------- Facts for the case ---------- */\n\ntaxable_income(alice, 236422).\nsurviving_spouse(alice).\n\n/* ---------- Derivation of Alice's tax liability ---------- */\n\nalice_tax(Tax) :-\n    taxable_income(alice, TI),\n    surviving_spouse(alice),\n    tax_section_1a(TI, Tax).\n\n/* ---------- Verification of the claim ---------- */\n\n:- (  alice_tax(Tax),\n      round(Tax, Rounded),\n      Rounded =:= 70640\n   -> format('Result: Entailment~n')\n   ;  format('Result: Contradiction~n')\n   ).\n:- halt."
+  },
+  {
+    "id": "s1_c_iii_neg",
+    "text": "Alice's taxable income for the year 2017 is $22895. Alice is not married, is not a surviving spouse, and is not a head of household in 2017.",
+    "question": "Alice has to pay $3538 in taxes for the year 2017 under section 1(c)(iii).",
+    "label": 0,
+    "reference_prolog": "/* ---------- Statutory rules (excerpts) ---------- */\n\n/* Tax computation under section 1(c) - unmarried individuals (other than surviving spouses and heads of household) */\ntax_section_1c(TI, Tax) :-\n    ( TI =< 22100 ->\n        Tax is 0.15 * TI\n    ; TI =< 53500 ->\n        Tax is 3315 + 0.28 * (TI - 22100)\n    ; TI =< 115000 ->\n        Tax is 12107 + 0.31 * (TI - 53500)\n    ; TI =< 250000 ->\n        Tax is 31172 + 0.36 * (TI - 115000)\n    ;\n        Tax is 79772 + 0.396 * (TI - 250000)\n    ).\n\n/* ---------- Facts for the case ---------- */\n\ntaxable_income(alice, 22895).\nnot_married(alice).\nnot_surviving_spouse(alice).\nnot_head_of_household(alice).\n\n/* ---------- Marital status for Alice (derived from facts) ---------- */\n\n/* Under section 7703(a): marital status is determined as of the close of the taxable year. */\nmarried_under_7703(_Person) :- fail.\n\n/* ---------- Classification for Alice ---------- */\n\n/* Section 1(c) applies when an individual is not married, not a surviving spouse, and not a head of household. */\nunmarried_individual_other_than_surviving_spouse_or_head_of_household(Person) :-\n    \\+ married_under_7703(Person),\n    not_surviving_spouse(Person),\n    not_head_of_household(Person).\n\n/* ---------- Derivation of Alice's tax liability ---------- */\n\nalice_tax(Tax) :-\n    taxable_income(alice, TI),\n    unmarried_individual_other_than_surviving_spouse_or_head_of_household(alice),\n    tax_section_1c(TI, Tax).\n\n/* ---------- Verification of the claim ---------- */\n\nclaim_tax(3538).\n\n:- (  alice_tax(Tax),\n      claim_tax(ClaimTax),\n      Tax =:= ClaimTax\n   -> format('Result: Entailment~n')\n   ;  format('Result: Contradiction~n')\n   ).\n:- halt."
+  },
+  {
+    "id": "s2_a_2_B_neg",
+    "text": "Alice and Bob got married on Feb 3rd, 1992. Alice died on July 9th, 2014. Alice was a nonresident alien since March 4th, 1990.",
+    "question": "Section 2(a)(2)(B) applies to Bob in 2014.",
+    "label": 0,
+    "reference_prolog": "/* ---------- Statutory rule: section 1(a)(ii) ---------- */\ntax_section_1a_ii(TI, Tax) :-\n    TI > 36900,\n    TI =< 89150,\n    Tax is 5535 + 0.28 * (TI - 36900).\n\n/* ---------- Facts for the case ---------- */\nsurviving_spouse(alice).\ntaxable_income(alice, 95129).\n\n/* ---------- Derivation of Alice's tax under section 1(a)(ii) ---------- */\nalice_tax(Tax) :-\n    surviving_spouse(alice),\n    taxable_income(alice, TI),\n    tax_section_1a_ii(TI, Tax).\n\n/* ---------- Verification of the claim ---------- */\n:- (  alice_tax(Tax),\n      round(Tax, Rounded),\n      Rounded =:= 22018\n   -> format('Result: Entailment~n')\n   ;  format('Result: Contradiction~n')\n   ).\n:- halt."
+  }
+]
