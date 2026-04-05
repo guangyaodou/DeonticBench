@@ -4,9 +4,27 @@
 
 <p align="center">
   <img src="assets/deontic_bench_main_plot.png" alt="DeonticBench overview" width="90%">
-  <br>
-  <em>Walkthrough of a DeonticBench instance in the symbolic setting. (1) Given the full problem context, the model performs deontic reasoning to identify and apply the relevant rules. (2) The LLM translates the problem into Prolog code. (3) The generated Prolog is executed by SWI-Prolog solver. The illustrated example is a 2017 tax-liability case.</em>
 </p>
+
+*Figure 1: Walkthrough of a DeonticBench instance in the symbolic setting. (1) Given the full problem context, the model performs deontic reasoning to identify and apply the relevant rules. (2) The LLM translates the problem into Prolog code. (3) The generated Prolog is executed by SWI-Prolog solver. The illustrated example is a 2017 tax-liability case.*
+
+## Table of Contents
+
+- [Dataset](#-dataset)
+- [Running Experiments](#running-experiments)
+  - [1. Install dependencies](#1-install-dependencies)
+  - [2. Choose a domain and split](#2-choose-a-domain-and-split)
+  - [3. Solving modes](#3-solving-modes)
+  - [4. Set your API key](#4-set-your-api-key)
+  - [5. Run inference](#5-run-inference)
+  - [6. Common options](#6-common-options)
+  - [7. Output layout](#7-output-layout)
+  - [8. Local models (vLLM)](#8-local-models-vllm)
+  - [9. Running inference directly](#9-running-inference-directly)
+- [Evaluating Results (Bootstrap CI)](#evaluating-results-bootstrap-ci)
+- [Training](#training)
+
+---
 
 ## 📊 Dataset
 
@@ -422,7 +440,10 @@ The script auto-discovers completed runs under `outputs/` and writes one CSV per
 
 ---
 
-## Notes
+## Training
 
-- **Airline IDs**: Cases are prefixed with their complexity tier (e.g., `airline_cases_complexity_0_airline_cases_2`) to disambiguate across the three complexity levels, which share the same filenames.
-- **USCIS-AAO IDs**: Generated as a SHA-256 hash of the case text (no original case filenames were available).
+We fine-tune models using three methods. Full training configurations are provided in the appendix of the paper.
+
+- **SFT and DPO** — trained with [LlamaFactory](https://github.com/hiyouga/LlamaFactory).
+- **Dr.GRPO** — trained with [verl](https://github.com/verl-project/verl).
+
