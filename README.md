@@ -2,6 +2,8 @@
 
 **DeonticBench** is a benchmark for evaluating LLMs on deontic reasoning over real-world legal and regulatory statutes. Given case facts and statutory rules, models must derive legally correct answers — either by generating executable Prolog programs (few-shot or zero-shot) or by answering directly in natural language. It spans five domains (U.S. federal tax, airline baggage policies, state housing law, and USCIS immigration appeals) and includes verified reference Prolog programs for each case.
 
+📄 **Paper:** [DeonticBench: A Benchmark for Reasoning over Rules](https://arxiv.org/abs/2604.04443)
+
 <p align="center">
   <img src="assets/deontic_bench_main_plot.png" alt="DeonticBench overview" width="90%">
 </p>
@@ -39,6 +41,8 @@ Each domain has three splits: **smoke** (5 cases for quick sanity checks), **har
 | **Airline** | Airline baggage fee policies | Integer (total cost, $) | 5 | 80 | 300 |
 | **Housing** | U.S. state housing and eviction law (50 states) | `"yes"` / `"no"` | 5 | 78 | 5314 |
 | **USCIS-AAO** | USCIS Administrative Appeals Office immigration cases | `"Accepted"` / `"Dismissed"` | 5 | 28 | 242 |
+
+For an interactive exploration of the USCIS-AAO cases, see the [USCIS-AAO Stats Dashboard](https://uscis-aao-stats-ui-215c824fe945.herokuapp.com/).
 
 Each entry contains a natural language `question`, a ground-truth `label`, and a `reference_prolog` program encoding the applicable rules and case facts. A `statutes` field carries the relevant legal text — shared across all cases for SARA and Airline, case-specific for Housing and USCIS.
 
