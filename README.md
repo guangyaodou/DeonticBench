@@ -32,6 +32,16 @@
 
 **Dataset**: Available on [Hugging Face](https://huggingface.co/datasets/gydou/DeonticBench)
 
+This repository ships only the **hard** and **smoke** splits under `data/`. To obtain the full dataset (including the `whole` split), download from HuggingFace:
+
+```bash
+pip install datasets
+python scripts/download_hf_data.py                              # all domains and splits
+python scripts/download_hf_data.py --domains sara_numeric airline --splits hard smoke
+```
+
+This writes each split to `data/<domain>/<split>.json` — the same layout the experiment scripts expect, so the rest of the workflow is unchanged. The `smoke` split is not on HuggingFace; the script derives it automatically from the first 5 cases of `hard`. The statute files in `statutes/` (used by sara_numeric, sara_binary, and airline) are also not part of the HuggingFace dataset and ship with the repository.
+
 Each domain has three splits: **smoke** (5 cases for quick sanity checks), **hard** (curated test subset with verified reference Prolog programs), and **whole** (full dataset). The hard set is always a subset of whole.
 
 | Domain | Description | Label | Smoke | Hard | Whole |
@@ -450,4 +460,19 @@ We fine-tune models using three methods. Full training configurations are provid
 
 - **SFT and DPO** — trained with [LlamaFactory](https://github.com/hiyouga/LlamaFactory).
 - **Dr.GRPO** — trained with [verl](https://github.com/verl-project/verl).
+
+---
+
+## Citation
+
+If you use DeonticBench in your research, please cite:
+
+```bibtex
+@article{dou2026deonticbench,
+  title={DeonticBench: A Benchmark for Reasoning over Rules},
+  author={Dou, Guangyao and Brena, Luis and Deo, Akhil and Jurayj, William and Zhang, Jingyu and Holzenberger, Nils and Van Durme, Benjamin},
+  journal={arXiv preprint arXiv:2604.04443},
+  year={2026}
+}
+```
 
