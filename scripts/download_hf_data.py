@@ -26,9 +26,9 @@ still ship with the repository.
 """
 import argparse
 import json
-import os
 import sys
 from pathlib import Path
+from typing import List, Optional
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -49,11 +49,14 @@ ALL_DOMAINS = list(DOMAIN_CONFIG.keys())
 ALL_SPLITS  = ["smoke", "hard", "whole"]
 
 
-def download_split(hf_config: str, split: str) -> list:
+def download_split(hf_config: str, split: str, cache_dir: Optional[Path] = None) -> List[dict]:
     """Load one (config, split) pair from HuggingFace and return a plain list."""
     from datasets import load_dataset  # imported here so the error is clear
 
-    ds = load_dataset(HF_REPO, hf_config, split=split, trust_remote_code=False)
+    ds = load_dataset(
+        HF_REPO, hf_config, split=split, trust_remote_code=False,
+        cache_dir=str(cache_dir) if cache_dir else None,
+    )
     return [dict(row) for row in ds]
 
 
@@ -90,6 +93,12 @@ def main() -> None:
         action="store_true",
         help="Overwrite existing files (default: skip if already present)",
     )
+    parser.add_argument(
+        "--cache-dir",
+        type=Path,
+        default=REPO_ROOT / ".hf_cache",
+        help="HuggingFace datasets cache directory (default: <repo>/.hf_cache)",
+    )
     args = parser.parse_args()
 
     try:
@@ -110,7 +119,7 @@ def main() -> None:
 
         # Cache the hard split in memory so we can derive smoke without a
         # second network round-trip.
-        hard_rows: list | None = None
+        hard_rows: Optional[List[dict]] = None
 
         for split in args.splits:
             out_path = out_dir / f"{split}.json"
@@ -130,7 +139,7 @@ def main() -> None:
                     else:
                         print(f"Downloading {domain}/hard (needed for smoke) …", end=" ", flush=True)
                         try:
-                            hard_rows = download_split(hf_config, "hard")
+                            hard_rows = download_split(hf_config, "hard", args.cache_dir)
                         except Exception as exc:
                             print(f"FAILED\n  {exc}", file=sys.stderr)
                             hard_rows = []
@@ -147,7 +156,7 @@ def main() -> None:
 
             print(f"Downloading {domain}/{split} …", end=" ", flush=True)
             try:
-                rows = download_split(hf_config, split)
+                rows = download_split(hf_config, split, args.cache_dir)
             except Exception as exc:
                 print(f"FAILED\n  {exc}", file=sys.stderr)
                 continue

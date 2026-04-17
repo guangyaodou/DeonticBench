@@ -16,6 +16,9 @@ assets/*.pdf
 # HuggingFace Hub upload script (internal use only)
 push_to_hub.py
 
+# HuggingFace local cache (used by download_hf_data.py)
+/.hf_cache/
+
 # Python
 __pycache__/
 *.py[cod]
