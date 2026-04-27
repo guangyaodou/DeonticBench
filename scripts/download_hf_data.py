@@ -26,6 +26,7 @@ still ship with the repository.
 """
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 from typing import List, Optional
@@ -49,6 +50,15 @@ ALL_DOMAINS = list(DOMAIN_CONFIG.keys())
 ALL_SPLITS  = ["smoke", "hard", "whole"]
 
 
+def strip_prolog_fences(s: str) -> str:
+    """Remove ```prolog ... ``` markdown fences from a reference_prolog string."""
+    if not s or not s.lstrip().startswith("```"):
+        return s
+    s = re.sub(r"^```(?:prolog)?\s*\n?", "", s.lstrip(), flags=re.IGNORECASE)
+    s = re.sub(r"\n?```\s*$", "", s.rstrip(), flags=re.IGNORECASE)
+    return s.strip()
+
+
 def download_split(hf_config: str, split: str, cache_dir: Optional[Path] = None) -> List[dict]:
     """Load one (config, split) pair from HuggingFace and return a plain list."""
     from datasets import load_dataset  # imported here so the error is clear
@@ -57,7 +67,11 @@ def download_split(hf_config: str, split: str, cache_dir: Optional[Path] = None)
         HF_REPO, hf_config, split=split, trust_remote_code=False,
         cache_dir=str(cache_dir) if cache_dir else None,
     )
-    return [dict(row) for row in ds]
+    rows = [dict(row) for row in ds]
+    for row in rows:
+        if "reference_prolog" in row and isinstance(row["reference_prolog"], str):
+            row["reference_prolog"] = strip_prolog_fences(row["reference_prolog"])
+    return rows
 
 
 def main() -> None:
@@ -117,8 +131,6 @@ def main() -> None:
         out_dir = args.output_dir / cfg["out_dir"]
         out_dir.mkdir(parents=True, exist_ok=True)
 
-        # Cache the hard split in memory so we can derive smoke without a
-        # second network round-trip.
         hard_rows: Optional[List[dict]] = None
 
         for split in args.splits:
@@ -131,7 +143,6 @@ def main() -> None:
             # smoke is derived from the first 5 cases of hard — not on HF.
             if split == "smoke":
                 if hard_rows is None:
-                    # hard hasn't been downloaded yet in this run; load it now.
                     hard_path = out_dir / "hard.json"
                     if hard_path.exists():
                         with open(hard_path, encoding="utf-8") as f:
@@ -162,7 +173,7 @@ def main() -> None:
                 continue
 
             if split == "hard":
-                hard_rows = rows  # cache for potential smoke derivation
+                hard_rows = rows
 
             with open(out_path, "w", encoding="utf-8") as f:
                 json.dump(rows, f, ensure_ascii=False, indent=2)

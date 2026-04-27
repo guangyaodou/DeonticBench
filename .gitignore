@@ -34,3 +34,4 @@ venv/
 .DS_Store
 *.swp
 *.swo
+scripts/run_reference_prolog.py
