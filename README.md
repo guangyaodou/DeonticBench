@@ -4,6 +4,10 @@
 
 📄 **Paper:** [DeonticBench: A Benchmark for Reasoning over Rules](https://arxiv.org/abs/2604.04443)
 
+## News
+
+- **2026-05-26** — Reference Prolog programs across all five domains (SARA Numeric, SARA Binary, Airline, Housing, USCIS-AAO) have been audited and corrected. Programs with flawed legal reasoning, trivially true logic, or hardcoded outputs were identified and rewritten. The updated dataset is now live on [Hugging Face](https://huggingface.co/datasets/gydou/DeonticBench).
+
 <p align="center">
   <img src="assets/deontic_bench_main_plot.png" alt="DeonticBench overview" width="90%">
 </p>
