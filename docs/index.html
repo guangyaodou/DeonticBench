@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DeonticBench — A Benchmark for Reasoning over Rules</title>
+<meta name="description" content="DeonticBench is a benchmark for evaluating LLMs on deontic reasoning over real-world legal and regulatory statutes, spanning five domains with verified reference Prolog programs." />
+
+<!-- Open Graph / social cards -->
+<meta property="og:title" content="DeonticBench — A Benchmark for Reasoning over Rules" />
+<meta property="og:description" content="Evaluating LLMs on deontic reasoning over real-world legal and regulatory statutes across five domains." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="assets/teaser.png" />
+<meta property="og:url" content="https://guangyaodou.github.io/DeonticBench" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f6f7f9;
+    --ink: #1a1d23;
+    --ink-soft: #525a66;
+    --line: #e6e8ec;
+    --brand: #2b50d6;
+    --brand-dark: #1d39a6;
+    --accent: #0e9f7a;
+    --max: 1040px;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--brand); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code, pre { font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+  section { padding: 56px 0; border-top: 1px solid var(--line); }
+  section:first-of-type { border-top: none; }
+  h2 {
+    font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em;
+    margin: 0 0 20px; text-align: center;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    text-align: center;
+    padding: 72px 24px 48px;
+    background:
+      radial-gradient(1200px 480px at 50% -120px, rgba(43,80,214,0.10), transparent 70%),
+      var(--bg);
+  }
+  .hero h1 {
+    font-size: clamp(2.4rem, 6vw, 3.8rem);
+    font-weight: 800; letter-spacing: -0.035em;
+    margin: 0 0 6px;
+    background: linear-gradient(90deg, var(--brand-dark), var(--brand) 55%, var(--accent));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero .tagline {
+    font-size: clamp(1.05rem, 2.4vw, 1.4rem);
+    color: var(--ink-soft); font-weight: 500; margin: 0 0 28px;
+  }
+  .authors {
+    max-width: 760px; margin: 0 auto 6px;
+    font-size: 1.05rem; color: var(--ink);
+  }
+  .authors a { color: var(--ink); border-bottom: 1px dashed var(--line); }
+  .affil { color: var(--ink-soft); font-size: 0.95rem; margin: 4px auto 0; max-width: 700px; }
+  .venue { color: var(--ink-soft); font-size: 0.95rem; margin-top: 10px; font-style: italic; }
+
+  .btn-row { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 30px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 20px; border-radius: 999px;
+    background: var(--ink); color: #fff; font-weight: 600; font-size: 0.98rem;
+    border: 1px solid var(--ink); transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+  }
+  .btn:hover { text-decoration: none; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,0.14); }
+  .btn.alt { background: #fff; color: var(--ink); border-color: var(--line); }
+  .btn.alt:hover { border-color: var(--ink-soft); }
+  .btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+  /* ---------- Teaser ---------- */
+  .teaser { text-align: center; }
+  .teaser img {
+    width: 100%; max-width: 940px; height: auto;
+    border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: 0 10px 40px rgba(20,30,60,0.08);
+  }
+  .caption { color: var(--ink-soft); font-size: 0.92rem; max-width: 860px; margin: 16px auto 0; text-align: left; }
+
+  /* ---------- Abstract ---------- */
+  .abstract p { max-width: 820px; margin: 0 auto; font-size: 1.06rem; color: #2b313b; }
+
+  /* ---------- Highlights ---------- */
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .card {
+    background: var(--bg-soft); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 22px;
+  }
+  .card .num { font-size: 1.9rem; font-weight: 800; color: var(--brand); letter-spacing: -0.02em; }
+  .card h3 { margin: 6px 0 6px; font-size: 1.08rem; }
+  .card p { margin: 0; color: var(--ink-soft); font-size: 0.96rem; }
+
+  /* ---------- Table ---------- */
+  .table-wrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.96rem; }
+  th, td { padding: 11px 14px; text-align: left; border-bottom: 1px solid var(--line); }
+  th { background: var(--bg-soft); font-weight: 700; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tbody tr:hover { background: #fafbfc; }
+  .dom { font-weight: 700; }
+
+  /* ---------- Modes ---------- */
+  .modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .mode { border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
+  .mode .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; background: rgba(43,80,214,0.10); color: var(--brand-dark); margin-bottom: 8px; }
+  .mode h3 { margin: 0 0 6px; font-size: 1.06rem; }
+  .mode p { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
+
+  /* ---------- Related paper ---------- */
+  .followup {
+    display: block; max-width: 820px; margin: 0 auto;
+    border: 1px solid var(--line); border-left: 4px solid var(--brand);
+    border-radius: var(--radius); padding: 24px 26px; background: var(--bg-soft);
+    color: inherit; transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  }
+  .followup:hover {
+    text-decoration: none; transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(20,30,60,0.10); border-left-color: var(--brand-dark);
+  }
+  .fw-kicker {
+    display: inline-block; padding: 3px 11px; border-radius: 999px;
+    font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase;
+    background: rgba(43,80,214,0.10); color: var(--brand-dark); margin-bottom: 12px;
+  }
+  .followup h3 { margin: 0 0 4px; font-size: 1.22rem; letter-spacing: -0.01em; }
+  .fw-authors { margin: 0 0 14px; color: var(--ink-soft); font-size: 0.98rem; }
+  .fw-abstract { margin: 0; font-size: 1.0rem; color: #2b313b; }
+  .fw-link {
+    display: inline-flex; align-items: center; gap: 7px; margin-top: 16px;
+    font-weight: 700; color: var(--brand);
+  }
+  .fw-link svg { width: 16px; height: 16px; fill: currentColor; }
+  .followup:hover .fw-link { color: var(--brand-dark); }
+
+  /* ---------- BibTeX ---------- */
+  .bib {
+    position: relative; background: #0f1217; color: #e6e9ef;
+    border-radius: var(--radius); padding: 20px 22px; overflow-x: auto;
+    font-size: 0.9rem; line-height: 1.55;
+  }
+  .bib pre { margin: 0; white-space: pre; }
+  .copy-btn {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(255,255,255,0.10); color: #e6e9ef; border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 8px; padding: 6px 12px; font-size: 0.82rem; cursor: pointer; font-weight: 600;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,0.18); }
+
+  footer { text-align: center; color: var(--ink-soft); font-size: 0.9rem; padding: 36px 24px 56px; border-top: 1px solid var(--line); }
+
+  @media (max-width: 760px) {
+    .cards, .modes { grid-template-columns: 1fr; }
+    section { padding: 44px 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="wrap">
+    <h1>DeonticBench</h1>
+    <p class="tagline">A Benchmark for Reasoning over Rules</p>
+
+    <p class="authors">
+      <a href="#">Guangyao Dou</a><sup>1</sup>,
+      <a href="#">Luis Brena</a><sup>1</sup>,
+      <a href="#">Akhil Deo</a><sup>1</sup>,
+      <a href="#">William Jurayj</a><sup>1</sup>,
+      <a href="#">Jingyu Zhang</a><sup>1</sup>,
+      <a href="#">Nils Holzenberger</a><sup>2</sup>,
+      <a href="#">Benjamin Van Durme</a><sup>1</sup>
+    </p>
+    <p class="affil"><sup>1</sup>Johns Hopkins University &nbsp;&middot;&nbsp; <sup>2</sup>Télécom Paris</p>
+
+    <div class="btn-row">
+      <a class="btn" href="https://arxiv.org/abs/2604.04443" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm8 1.5V8h4.5L14 3.5zM8 12h8v1.6H8V12zm0 3.4h8V17H8v-1.6zm0-6.8h4v1.6H8V8.6z"/></svg>
+        Paper
+      </a>
+      <a class="btn alt" href="https://github.com/guangyaodou/DeonticBench" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+        Code
+      </a>
+      <a class="btn alt" href="https://huggingface.co/datasets/gydou/DeonticBench" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0-6 6c0 1.3.4 2.4 1.1 3.4-.7.5-1.1 1.3-1.1 2.1 0 .8.4 1.5 1 2-.3.4-.5 1-.5 1.5a2.5 2.5 0 0 0 4.7 1.1c.2 0 .5.1.8.1s.6 0 .8-.1A2.5 2.5 0 0 0 17.5 18c0-.5-.2-1.1-.5-1.5.6-.5 1-1.2 1-2 0-.8-.4-1.6-1.1-2.1.7-1 1.1-2.1 1.1-3.4a6 6 0 0 0-6-6zm-2 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm4 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
+        Dataset (HF)
+      </a>
+      <a class="btn alt" href="https://uscis-aao-stats-ui-215c824fe945.herokuapp.com/" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h8v8H3V3zm10 0h8v5h-8V3zM3 13h8v8H3v-8zm10 3h8v5h-8v-5z"/></svg>
+        USCIS Dashboard
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ================= TEASER ================= -->
+<section class="teaser">
+  <div class="wrap">
+    <img src="assets/teaser.png" alt="Overview of a DeonticBench instance in the symbolic setting." />
+    <p class="caption">
+      <strong>Figure 1.</strong> Walkthrough of a DeonticBench instance in the symbolic setting.
+      (1) Given the full problem context, the model performs deontic reasoning to identify and apply the relevant rules.
+      (2) The LLM translates the problem into Prolog code.
+      (3) The generated Prolog is executed by the SWI-Prolog solver.
+      The illustrated example is a 2017 tax-liability case.
+    </p>
+  </div>
+</section>
+
+<!-- ================= ABSTRACT ================= -->
+<section class="abstract">
+  <div class="wrap">
+    <h2>Abstract</h2>
+    <p>
+      <strong>DeonticBench</strong> is a benchmark for evaluating LLMs on <em>deontic reasoning</em> over real-world
+      legal and regulatory statutes. Given case facts and statutory rules, models must derive legally correct
+      answers — either by generating executable Prolog programs (few-shot or zero-shot) or by answering directly
+      in natural language. It spans five domains — U.S. federal income tax, airline baggage policies, state housing
+      and eviction law, and USCIS immigration appeals — and ships with verified reference Prolog programs for every
+      case, enabling rigorous, executable evaluation of rule-following beyond surface-level pattern matching.
+    </p>
+  </div>
+</section>
+
+<!-- ================= HIGHLIGHTS ================= -->
+<section>
+  <div class="wrap">
+    <h2>At a Glance</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="num">5</div>
+        <h3>Real-world domains</h3>
+        <p>Tax, airline, housing, and immigration law — drawn from actual statutes and case records.</p>
+      </div>
+      <div class="card">
+        <div class="num">3</div>
+        <h3>Solving modes</h3>
+        <p>Few-shot Prolog, zero-shot Prolog, and direct natural-language answering.</p>
+      </div>
+      <div class="card">
+        <div class="num">6k+</div>
+        <h3>Verified cases</h3>
+        <p>Each with a ground-truth label and an audited reference Prolog program.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DATASET TABLE ================= -->
+<section>
+  <div class="wrap">
+    <h2>Dataset</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Domain</th>
+            <th>Description</th>
+            <th>Label</th>
+            <th class="num">Smoke</th>
+            <th class="num">Hard</th>
+            <th class="num">Whole</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="dom">SARA Numeric</td><td>U.S. federal income tax (§1, §2, §63, §151, §152, …)</td><td>Integer (tax owed, $)</td><td class="num">5</td><td class="num">35</td><td class="num">100</td></tr>
+          <tr><td class="dom">SARA Binary</td><td>Entailment / contradiction over individual tax statute clauses</td><td><code>0</code> / <code>1</code></td><td class="num">5</td><td class="num">30</td><td class="num">276</td></tr>
+          <tr><td class="dom">Airline</td><td>Airline baggage fee policies</td><td>Integer (total cost, $)</td><td class="num">5</td><td class="num">80</td><td class="num">300</td></tr>
+          <tr><td class="dom">Housing</td><td>U.S. state housing and eviction law (50 states)</td><td><code>"yes"</code> / <code>"no"</code></td><td class="num">5</td><td class="num">78</td><td class="num">5314</td></tr>
+          <tr><td class="dom">USCIS-AAO</td><td>USCIS Administrative Appeals Office immigration cases</td><td><code>"Accepted"</code> / <code>"Dismissed"</code></td><td class="num">5</td><td class="num">28</td><td class="num">242</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption" style="text-align:center;">
+      Each split is available on
+      <a href="https://huggingface.co/datasets/gydou/DeonticBench" target="_blank" rel="noopener">Hugging Face</a>.
+      Every entry contains a natural-language question, a ground-truth label, and a verified
+      <code>reference_prolog</code> program encoding the applicable rules and case facts.
+    </p>
+  </div>
+</section>
+
+<!-- ================= MODES ================= -->
+<section>
+  <div class="wrap">
+    <h2>Three Solving Modes</h2>
+    <div class="modes">
+      <div class="mode">
+        <span class="pill">few-shot</span>
+        <h3>Few-shot Prolog</h3>
+        <p>The model is given the statute text and 1–2 worked Prolog examples, then writes Prolog for the new case.</p>
+      </div>
+      <div class="mode">
+        <span class="pill">zero-shot</span>
+        <h3>Zero-shot Prolog</h3>
+        <p>The model writes Prolog with only the statute text — no worked examples to imitate.</p>
+      </div>
+      <div class="mode">
+        <span class="pill">direct</span>
+        <h3>Direct answer</h3>
+        <p>The model answers the question in natural language, with no symbolic intermediate representation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RELATED PAPER ================= -->
+<section>
+  <div class="wrap">
+    <h2>Related Paper</h2>
+    <a class="followup" href="assets/dar_paper.pdf" target="_blank" rel="noopener">
+      <span class="fw-kicker">Built on DeonticBench</span>
+      <h3>DAR: Deontic Reasoning with Agentic Harnesses</h3>
+      <p class="fw-authors">Guangyao Dou, William Jurayj, Nils Holzenberger, Benjamin Van Durme</p>
+      <p class="fw-abstract">
+        A key challenge for LLM-based deontic reasoning is that the relevant ruleset can be long and
+        heavily cross-referenced, so models may fail to locate the rules needed for a particular step.
+        <strong>Deontic Agentic Reasoning (DAR)</strong> places the statute as a file in a harness environment
+        and lets the model examine it on demand with general-purpose tools (<code>grep</code>, <code>sed</code>,
+        <code>cat</code>, Python). Evaluated on the hard subsets of DeonticBench, agentic harnesses
+        <strong>push the frontier on deontic reasoning — but unevenly</strong>: frontier models gain 15–30% on
+        SARA-Numeric under the Terminus-KIRA harness, while weaker open-source models degrade by 11–23% and
+        consume up to 4&times; more tokens on the same tasks.
+      </p>
+      <span class="fw-link">
+        <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm8 1.5V8h4.5L14 3.5zM8 12h8v1.6H8V12zm0 3.4h8V17H8v-1.6zm0-6.8h4v1.6H8V8.6z"/></svg>
+        View PDF
+      </span>
+    </a>
+  </div>
+</section>
+
+<!-- ================= BIBTEX ================= -->
+<section>
+  <div class="wrap">
+    <h2>Citation</h2>
+    <div class="bib">
+      <button class="copy-btn" onclick="copyBib()">Copy</button>
+<pre id="bibtex">@article{dou2026deonticbench,
+  title={DeonticBench: A Benchmark for Reasoning over Rules},
+  author={Dou, Guangyao and Brena, Luis and Deo, Akhil and Jurayj, William and Zhang, Jingyu and Holzenberger, Nils and Van Durme, Benjamin},
+  journal={arXiv preprint arXiv:2604.04443},
+  year={2026}
+}</pre>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>
+    &copy; 2026 The DeonticBench Authors &nbsp;&middot;&nbsp;
+    <a href="https://github.com/guangyaodou/DeonticBench" target="_blank" rel="noopener">GitHub</a> &nbsp;&middot;&nbsp;
+    <a href="https://huggingface.co/datasets/gydou/DeonticBench" target="_blank" rel="noopener">Hugging Face</a> &nbsp;&middot;&nbsp;
+    <a href="https://arxiv.org/abs/2604.04443" target="_blank" rel="noopener">arXiv</a>
+  </p>
+  <p style="margin-top:8px; font-size:0.82rem;">
+    Page template — feel free to edit author links and affiliations in <code>index.html</code>.
+  </p>
+</footer>
+
+<script>
+  function copyBib() {
+    const text = document.getElementById('bibtex').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('.copy-btn');
+      const old = btn.innerText;
+      btn.innerText = 'Copied!';
+      setTimeout(() => btn.innerText = old, 1500);
+    });
+  }
+</script>
+</body>
+</html>
