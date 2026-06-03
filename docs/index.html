@@ -124,6 +124,13 @@
   tbody tr:hover { background: #fafbfc; }
   .dom { font-weight: 700; }
 
+  /* ---------- Dataset table (centered) ---------- */
+  .dataset { width: auto; margin: 0 auto; display: inline-table; }
+  .dataset th, .dataset td { text-align: center; }
+  .dataset th.num { text-align: center; }
+  .dataset td.num { text-align: center; }
+  .dataset td.desc { text-align: left; }
+
   /* ---------- Modes ---------- */
   .modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
   .mode { border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
@@ -309,7 +316,7 @@
   <div class="wrap">
     <h2>Dataset</h2>
     <div class="table-wrap">
-      <table>
+      <table class="dataset">
         <thead>
           <tr>
             <th>Domain</th>
@@ -318,14 +325,15 @@
             <th class="num">Smoke</th>
             <th class="num">Hard</th>
             <th class="num">Whole</th>
+            <th>Source</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td class="dom">SARA Numeric</td><td>U.S. federal income tax (§1, §2, §63, §151, §152, …)</td><td>Integer (tax owed, $)</td><td class="num">5</td><td class="num">35</td><td class="num">100</td></tr>
-          <tr><td class="dom">SARA Binary</td><td>Entailment / contradiction over individual tax statute clauses</td><td><code>0</code> / <code>1</code></td><td class="num">5</td><td class="num">30</td><td class="num">276</td></tr>
-          <tr><td class="dom">Airline</td><td>Airline baggage fee policies</td><td>Integer (total cost, $)</td><td class="num">5</td><td class="num">80</td><td class="num">300</td></tr>
-          <tr><td class="dom">Housing</td><td>U.S. state housing and eviction law (50 states)</td><td><code>"yes"</code> / <code>"no"</code></td><td class="num">5</td><td class="num">78</td><td class="num">5314</td></tr>
-          <tr><td class="dom">USCIS-AAO</td><td>USCIS Administrative Appeals Office immigration cases</td><td><code>"Accepted"</code> / <code>"Dismissed"</code></td><td class="num">5</td><td class="num">28</td><td class="num">242</td></tr>
+          <tr><td class="dom">SARA Numeric</td><td class="desc">U.S. federal income tax (§1, §2, §63, §151, §152, …)</td><td>Integer (tax owed, $)</td><td class="num">5</td><td class="num">35</td><td class="num">100</td><td><a href="https://nlp.jhu.edu/law/sara/" target="_blank" rel="noopener">SARA</a></td></tr>
+          <tr><td class="dom">SARA Binary</td><td class="desc">Entailment / contradiction over individual tax statute clauses</td><td><code>0</code> / <code>1</code></td><td class="num">5</td><td class="num">30</td><td class="num">276</td><td><a href="https://nlp.jhu.edu/law/sara/" target="_blank" rel="noopener">SARA</a></td></tr>
+          <tr><td class="dom">Airline</td><td class="desc">Airline baggage fee policies</td><td>Integer (total cost, $)</td><td class="num">5</td><td class="num">80</td><td class="num">300</td><td><a href="https://github.com/skyriver-2000/RuleArena" target="_blank" rel="noopener">RuleArena</a></td></tr>
+          <tr><td class="dom">Housing</td><td class="desc">U.S. state housing and eviction law (50 states)</td><td><code>"yes"</code> / <code>"no"</code></td><td class="num">5</td><td class="num">78</td><td class="num">5314</td><td><a href="https://reglab.github.io/legal-rag-benchmarks/" target="_blank" rel="noopener">LegalBench-RAG</a></td></tr>
+          <tr><td class="dom">USCIS-AAO</td><td class="desc">USCIS Administrative Appeals Office immigration cases</td><td><code>"Accepted"</code> / <code>"Dismissed"</code></td><td class="num">5</td><td class="num">28</td><td class="num">242</td><td><em>New (this work)</em></td></tr>
         </tbody>
       </table>
     </div>
