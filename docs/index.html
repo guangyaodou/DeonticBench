@@ -322,18 +322,16 @@
             <th>Domain</th>
             <th>Description</th>
             <th>Label</th>
-            <th class="num">Smoke</th>
             <th class="num">Hard</th>
             <th class="num">Whole</th>
-            <th>Source</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td class="dom">SARA Numeric</td><td class="desc">U.S. federal income tax (§1, §2, §63, §151, §152, …)</td><td>Integer (tax owed, $)</td><td class="num">5</td><td class="num">35</td><td class="num">100</td><td><a href="https://nlp.jhu.edu/law/sara/" target="_blank" rel="noopener">SARA</a></td></tr>
-          <tr><td class="dom">SARA Binary</td><td class="desc">Entailment / contradiction over individual tax statute clauses</td><td><code>0</code> / <code>1</code></td><td class="num">5</td><td class="num">30</td><td class="num">276</td><td><a href="https://nlp.jhu.edu/law/sara/" target="_blank" rel="noopener">SARA</a></td></tr>
-          <tr><td class="dom">Airline</td><td class="desc">Airline baggage fee policies</td><td>Integer (total cost, $)</td><td class="num">5</td><td class="num">80</td><td class="num">300</td><td><a href="https://github.com/skyriver-2000/RuleArena" target="_blank" rel="noopener">RuleArena</a></td></tr>
-          <tr><td class="dom">Housing</td><td class="desc">U.S. state housing and eviction law (50 states)</td><td><code>"yes"</code> / <code>"no"</code></td><td class="num">5</td><td class="num">78</td><td class="num">5314</td><td><a href="https://reglab.github.io/legal-rag-benchmarks/" target="_blank" rel="noopener">LegalBench-RAG</a></td></tr>
-          <tr><td class="dom">USCIS-AAO</td><td class="desc">USCIS Administrative Appeals Office immigration cases</td><td><code>"Accepted"</code> / <code>"Dismissed"</code></td><td class="num">5</td><td class="num">28</td><td class="num">242</td><td><em>New (this work)</em></td></tr>
+          <tr><td class="dom"><a href="https://nlp.jhu.edu/law/sara/" target="_blank" rel="noopener">SARA Numeric</a></td><td class="desc">U.S. federal income tax (§1, §2, §63, §151, §152, …)</td><td>Integer (tax owed, $)</td><td class="num">35</td><td class="num">100</td></tr>
+          <tr><td class="dom"><a href="https://nlp.jhu.edu/law/sara/" target="_blank" rel="noopener">SARA Binary</a></td><td class="desc">Entailment / contradiction over individual tax statute clauses</td><td><code>0</code> / <code>1</code></td><td class="num">30</td><td class="num">276</td></tr>
+          <tr><td class="dom"><a href="https://github.com/skyriver-2000/RuleArena" target="_blank" rel="noopener">Airline</a></td><td class="desc">Airline baggage fee policies</td><td>Integer (total cost, $)</td><td class="num">80</td><td class="num">300</td></tr>
+          <tr><td class="dom"><a href="https://reglab.github.io/legal-rag-benchmarks/" target="_blank" rel="noopener">Housing</a></td><td class="desc">U.S. state housing and eviction law (50 states)</td><td><code>"yes"</code> / <code>"no"</code></td><td class="num">78</td><td class="num">5314</td></tr>
+          <tr><td class="dom">USCIS-AAO</td><td class="desc">USCIS Administrative Appeals Office immigration cases</td><td><code>"Accepted"</code> / <code>"Dismissed"</code></td><td class="num">28</td><td class="num">242</td></tr>
         </tbody>
       </table>
     </div>
@@ -342,6 +340,7 @@
       <a href="https://huggingface.co/datasets/gydou/DeonticBench" target="_blank" rel="noopener">Hugging Face</a>.
       Every entry contains a natural-language question, a ground-truth label, and a verified
       <code>reference_prolog</code> program encoding the applicable rules and case facts.
+      Domain names link to their original source datasets; USCIS-AAO is introduced in this work.
     </p>
   </div>
 </section>
