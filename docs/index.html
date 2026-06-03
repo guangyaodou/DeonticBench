@@ -157,6 +157,16 @@
   .fw-link svg { width: 16px; height: 16px; fill: currentColor; }
   .followup:hover .fw-link { color: var(--brand-dark); }
 
+  /* ---------- Figure block (Figure 2) ---------- */
+  .figblock { max-width: 880px; margin: 0 auto; text-align: center; }
+  .figblock .legend-img { width: 70%; max-width: 560px; height: auto; margin: 0 auto 10px; display: block; }
+  .figblock .panel-label { font-weight: 700; font-size: 0.98rem; margin: 18px 0 8px; }
+  .figblock .panel {
+    width: 100%; height: auto; display: block;
+    border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: 0 6px 24px rgba(20,30,60,0.07);
+  }
+
   /* ---------- Key findings ---------- */
   .findings { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
   .finding {
@@ -436,6 +446,27 @@
       <strong>bolded</strong>. Values are means over <em>K</em> generations; 95% bootstrap
       confidence intervals are reported in the
       <a href="https://github.com/guangyaodou/DeonticBench" target="_blank" rel="noopener">paper</a>.
+    </p>
+  </div>
+</section>
+
+<!-- ================= FIGURE 2: PERFORMANCE DECOMPOSITION ================= -->
+<section>
+  <div class="wrap">
+    <h2>Performance Decomposition</h2>
+    <div class="figblock">
+      <img class="legend-img" src="assets/fig2_legend.png" alt="Legend: correct, incorrect, and abstention." />
+      <div class="panel-label">SARA Numeric</div>
+      <img class="panel" src="assets/fig2_sara_numeric.png" alt="Performance decomposition for SARA Numeric: correct, incorrect, and abstention rates per model and prompting strategy." />
+      <div class="panel-label">Airline</div>
+      <img class="panel" src="assets/fig2_airline.png" alt="Performance decomposition for Airline: correct, incorrect, and abstention rates per model and prompting strategy." />
+    </div>
+    <p class="caption" style="text-align:center;">
+      <strong>Figure 2.</strong> Performance decomposition for SARA Numeric and Airline. Each model
+      shows three bars (left to right: Direct, Zero-Shot, Few-Shot), split into correct, incorrect,
+      and abstention rates. A large fraction of errors are confident <em>incorrect</em> answers rather
+      than abstentions. Prolog solving raises abstention, while direct prompting trades it for more
+      wrong answers, reflecting a trade-off between coverage and reliability.
     </p>
   </div>
 </section>
