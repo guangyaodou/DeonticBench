@@ -157,6 +157,27 @@
   .fw-link svg { width: 16px; height: 16px; fill: currentColor; }
   .followup:hover .fw-link { color: var(--brand-dark); }
 
+  /* ---------- Key findings ---------- */
+  .findings { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .finding {
+    background: var(--bg-soft); border: 1px solid var(--line); border-left: 4px solid var(--brand);
+    border-radius: var(--radius); padding: 20px 22px;
+  }
+  .finding h3 { margin: 0 0 6px; font-size: 1.05rem; }
+  .finding p { margin: 0; color: var(--ink-soft); font-size: 0.96rem; }
+
+  /* ---------- Results table ---------- */
+  .results { font-size: 0.86rem; }
+  .results th, .results td { padding: 7px 10px; border-bottom: 1px solid var(--line); }
+  .results thead th { text-align: center; background: var(--bg-soft); }
+  .results .grouphead th { font-size: 0.78rem; letter-spacing: 0.02em; color: var(--ink-soft); }
+  .results td.val { text-align: right; font-variant-numeric: tabular-nums; }
+  .results .model { font-weight: 700; white-space: nowrap; vertical-align: middle; border-right: 1px solid var(--line); }
+  .results .setting { color: var(--ink-soft); white-space: nowrap; }
+  .results tr.grp td, .results tr.grp th { border-top: 2px solid #d4d8de; }
+  .results strong { color: var(--brand-dark); }
+  .results td.best { background: rgba(43,80,214,0.08); }
+
   /* ---------- BibTeX ---------- */
   .bib {
     position: relative; background: #0f1217; color: #e6e9ef;
@@ -174,7 +195,7 @@
   footer { text-align: center; color: var(--ink-soft); font-size: 0.9rem; padding: 36px 24px 56px; border-top: 1px solid var(--line); }
 
   @media (max-width: 760px) {
-    .cards, .modes { grid-template-columns: 1fr; }
+    .cards, .modes, .findings { grid-template-columns: 1fr; }
     section { padding: 44px 0; }
   }
 </style>
@@ -264,9 +285,9 @@
         <p>Few-shot Prolog, zero-shot Prolog, and direct natural-language answering.</p>
       </div>
       <div class="card">
-        <div class="num">6k+</div>
-        <h3>Verified cases</h3>
-        <p>Each with a ground-truth label and an audited reference Prolog program.</p>
+        <div class="num">6,232</div>
+        <h3>Verified tasks</h3>
+        <p>Each with a ground-truth label and a reference Prolog program for every instance.</p>
       </div>
     </div>
   </div>
@@ -327,6 +348,94 @@
         <p>The model answers the question in natural language, with no symbolic intermediate representation.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ================= KEY FINDINGS ================= -->
+<section>
+  <div class="wrap">
+    <h2>Key Findings</h2>
+    <div class="findings">
+      <div class="finding">
+        <h3>Reasoning over rules is hard for every model</h3>
+        <p>On the hard subsets, even the best configuration reaches only <strong>44.4% accuracy on SARA Numeric</strong> and <strong>~47 macro-F1 on Housing</strong>. No single model leads across all five domains, and bootstrap confidence intervals stay wide.</p>
+      </div>
+      <div class="finding">
+        <h3>A clear frontier vs. open-source gap</h3>
+        <p>Open-source models lag in few- and zero-shot Prolog and are highly prompt-sensitive — Qwen3-235B jumps from near-random <strong>0.7 → 32.1</strong> on SARA Numeric between few-shot and direct prompting. The gap narrows on binary tasks.</p>
+      </div>
+      <div class="finding">
+        <h3>Failure modes are domain-dependent</h3>
+        <p>Legal domains (Housing, USCIS-AAO) are bottlenecked by <strong>rule selection</strong>; SARA tasks by <strong>fact extraction</strong>; Airline by <strong>arithmetic precision</strong>. Most errors are confident wrong answers, not abstentions.</p>
+      </div>
+      <div class="finding">
+        <h3>Training helps — but not enough</h3>
+        <p>SFT and RL (DPO, Dr.&nbsp;GRPO) improve Prolog quality and binary-task accuracy, but current RL methods still fail to reliably solve precise numeric reasoning. Robust, executable rule reasoning remains open.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MAIN RESULTS ================= -->
+<section>
+  <div class="wrap">
+    <h2>Main Results</h2>
+    <div class="table-wrap">
+      <table class="results">
+        <thead>
+          <tr class="grouphead">
+            <th colspan="2"></th>
+            <th colspan="2">Accuracy</th>
+            <th colspan="3">Macro F1</th>
+          </tr>
+          <tr>
+            <th>Model</th><th>Setting</th>
+            <th>SARA Num.</th><th>Airline</th>
+            <th>SARA Bin.</th><th>USCIS-AAO</th><th>Housing</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="grp"><td class="model" rowspan="3">GPT-4.1</td><td class="setting">Few-Shot</td><td class="val">23.7</td><td class="val">41.5</td><td class="val">39.1</td><td class="val">53.0</td><td class="val">46.6</td></tr>
+          <tr><td class="setting">Zero-Shot</td><td class="val">6.7</td><td class="val">1.7</td><td class="val">40.5</td><td class="val">55.5</td><td class="val">44.7</td></tr>
+          <tr><td class="setting">Direct</td><td class="val">18.8</td><td class="val">6.7</td><td class="val">30.3</td><td class="val">50.9</td><td class="val">20.2</td></tr>
+
+          <tr class="grp"><td class="model" rowspan="3">O3</td><td class="setting">Few-Shot</td><td class="val">15.2</td><td class="val best"><strong>90.8</strong></td><td class="val">29.5</td><td class="val">49.4</td><td class="val">43.0</td></tr>
+          <tr><td class="setting">Zero-Shot</td><td class="val best"><strong>44.4</strong></td><td class="val">18.5</td><td class="val">32.3</td><td class="val">48.5</td><td class="val">39.6</td></tr>
+          <tr><td class="setting">Direct</td><td class="val">33.5</td><td class="val">37.8</td><td class="val">59.5</td><td class="val">52.6</td><td class="val">20.8</td></tr>
+
+          <tr class="grp"><td class="model" rowspan="3">GPT-5.1</td><td class="setting">Few-Shot</td><td class="val">33.1</td><td class="val">52.3</td><td class="val">28.7</td><td class="val">61.4</td><td class="val best"><strong>46.8</strong></td></tr>
+          <tr><td class="setting">Zero-Shot</td><td class="val">44.0</td><td class="val">40.2</td><td class="val">20.2</td><td class="val">65.9</td><td class="val">41.2</td></tr>
+          <tr><td class="setting">Direct</td><td class="val">15.9</td><td class="val">28.4</td><td class="val">54.0</td><td class="val best"><strong>71.5</strong></td><td class="val">18.4</td></tr>
+
+          <tr class="grp"><td class="model" rowspan="3">GPT-5.2</td><td class="setting">Few-Shot</td><td class="val">17.1</td><td class="val">77.9</td><td class="val">24.3</td><td class="val">37.6</td><td class="val">41.1</td></tr>
+          <tr><td class="setting">Zero-Shot</td><td class="val">27.6</td><td class="val">2.5</td><td class="val">16.0</td><td class="val">51.5</td><td class="val">33.4</td></tr>
+          <tr><td class="setting">Direct</td><td class="val">20.7</td><td class="val">29.9</td><td class="val">25.8</td><td class="val">58.3</td><td class="val">17.4</td></tr>
+
+          <tr class="grp"><td class="model" rowspan="3">Kimi K2 Instruct</td><td class="setting">Few-Shot</td><td class="val">9.3</td><td class="val">42.6</td><td class="val">48.5</td><td class="val">38.2</td><td class="val">37.1</td></tr>
+          <tr><td class="setting">Zero-Shot</td><td class="val">10.1</td><td class="val">0.0</td><td class="val">52.7</td><td class="val">43.4</td><td class="val">39.8</td></tr>
+          <tr><td class="setting">Direct</td><td class="val">8.4</td><td class="val">0.9</td><td class="val">68.4</td><td class="val">51.8</td><td class="val">24.9</td></tr>
+
+          <tr class="grp"><td class="model" rowspan="3">Claude Sonnet 4.5</td><td class="setting">Few-Shot</td><td class="val">21.6</td><td class="val">85.8</td><td class="val">28.7</td><td class="val">63.1</td><td class="val">42.9</td></tr>
+          <tr><td class="setting">Zero-Shot</td><td class="val">21.9</td><td class="val">5.7</td><td class="val">43.9</td><td class="val">63.0</td><td class="val">45.0</td></tr>
+          <tr><td class="setting">Direct</td><td class="val">41.2</td><td class="val">6.2</td><td class="val best"><strong>70.0</strong></td><td class="val">7.2</td><td class="val">32.1</td></tr>
+
+          <tr class="grp"><td class="model" rowspan="3">Gemini 2.5 Flash</td><td class="setting">Few-Shot</td><td class="val">2.7</td><td class="val">28.4</td><td class="val">44.7</td><td class="val">31.8</td><td class="val">43.4</td></tr>
+          <tr><td class="setting">Zero-Shot</td><td class="val">0.9</td><td class="val">0.6</td><td class="val">16.5</td><td class="val">33.4</td><td class="val">46.0</td></tr>
+          <tr><td class="setting">Direct</td><td class="val">30.5</td><td class="val">18.1</td><td class="val">61.1</td><td class="val">45.9</td><td class="val">30.2</td></tr>
+
+          <tr class="grp"><td class="model" rowspan="3">Qwen3-235B</td><td class="setting">Few-Shot</td><td class="val">0.7</td><td class="val">22.9</td><td class="val">37.8</td><td class="val">24.4</td><td class="val">38.6</td></tr>
+          <tr><td class="setting">Zero-Shot</td><td class="val">8.7</td><td class="val">4.6</td><td class="val">27.2</td><td class="val">35.8</td><td class="val">43.5</td></tr>
+          <tr><td class="setting">Direct</td><td class="val">32.1</td><td class="val">12.8</td><td class="val">66.5</td><td class="val">53.1</td><td class="val">25.7</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption" style="text-align:center;">
+      Results on the hard subsets. SARA Numeric and Airline report accuracy (±$1 tolerance);
+      SARA Binary, USCIS-AAO, and Housing report macro-F1. The best score per domain is
+      <strong>bolded</strong>. Values are means over <em>K</em> generations; 95% bootstrap
+      confidence intervals are reported in the
+      <a href="https://github.com/guangyaodou/DeonticBench" target="_blank" rel="noopener">paper</a>.
+    </p>
   </div>
 </section>
 

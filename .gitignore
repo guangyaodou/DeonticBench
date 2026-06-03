@@ -11,6 +11,7 @@ CLAUDE.md
 
 # Paper / assets (not for public release)
 COLM2026_DeonticBench_arxiv.pdf
+COLM2026_DeonticBench_arxiv/
 assets/*.pdf
 
 # HuggingFace Hub upload script (internal use only)
