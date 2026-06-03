@@ -167,13 +167,14 @@
   .finding p { margin: 0; color: var(--ink-soft); font-size: 0.96rem; }
 
   /* ---------- Results table ---------- */
-  .results { font-size: 0.86rem; }
-  .results th, .results td { padding: 7px 10px; border-bottom: 1px solid var(--line); }
+  .table-wrap { text-align: center; }
+  .results { font-size: 0.86rem; width: auto; margin: 0 auto; display: inline-table; }
+  .results th, .results td { padding: 7px 12px; border-bottom: 1px solid var(--line); }
   .results thead th { text-align: center; background: var(--bg-soft); }
   .results .grouphead th { font-size: 0.78rem; letter-spacing: 0.02em; color: var(--ink-soft); }
-  .results td.val { text-align: right; font-variant-numeric: tabular-nums; }
-  .results .model { font-weight: 700; white-space: nowrap; vertical-align: middle; border-right: 1px solid var(--line); }
-  .results .setting { color: var(--ink-soft); white-space: nowrap; }
+  .results td.val { text-align: center; font-variant-numeric: tabular-nums; }
+  .results .model { font-weight: 700; white-space: nowrap; vertical-align: middle; border-right: 1px solid var(--line); text-align: left; }
+  .results .setting { color: var(--ink-soft); white-space: nowrap; text-align: left; }
   .results tr.grp td, .results tr.grp th { border-top: 2px solid #d4d8de; }
   .results strong { color: var(--brand-dark); }
   .results td.best { background: rgba(43,80,214,0.08); }
@@ -209,13 +210,13 @@
     <p class="tagline">A Benchmark for Reasoning over Rules</p>
 
     <p class="authors">
-      <a href="#">Guangyao Dou</a><sup>1</sup>,
-      <a href="#">Luis Brena</a><sup>1</sup>,
-      <a href="#">Akhil Deo</a><sup>1</sup>,
-      <a href="#">William Jurayj</a><sup>1</sup>,
-      <a href="#">Jingyu Zhang</a><sup>1</sup>,
-      <a href="#">Nils Holzenberger</a><sup>2</sup>,
-      <a href="#">Benjamin Van Durme</a><sup>1</sup>
+      <a href="https://guangyaodou.github.io/" target="_blank" rel="noopener">Guangyao Dou</a><sup>1</sup>,
+      Luis Brena<sup>1</sup>,
+      Akhil Deo<sup>1</sup>,
+      William Jurayj<sup>1</sup>,
+      Jingyu Zhang<sup>1</sup>,
+      Nils Holzenberger<sup>2</sup>,
+      Benjamin Van Durme<sup>1</sup>
     </p>
     <p class="affil"><sup>1</sup>Johns Hopkins University &nbsp;&middot;&nbsp; <sup>2</sup>Télécom Paris</p>
 
