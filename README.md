@@ -2,11 +2,17 @@
 
 **DeonticBench** is a benchmark for evaluating LLMs on deontic reasoning over real-world legal and regulatory statutes. Given case facts and statutory rules, models must derive legally correct answers — either by generating executable Prolog programs (few-shot or zero-shot) or by answering directly in natural language. It spans five domains (U.S. federal tax, airline baggage policies, state housing law, and USCIS immigration appeals) and includes verified reference Prolog programs for each case.
 
-📄 **Paper:** [DeonticBench: A Benchmark for Reasoning over Rules](https://arxiv.org/abs/2604.04443)
+<p align="center">
+  🌐 <a href="https://guangyaodou.github.io/DeonticBench/"><b>Project Website</b></a> &nbsp;•&nbsp;
+  📄 <a href="https://arxiv.org/abs/2604.04443"><b>Paper</b></a> &nbsp;•&nbsp;
+  <a href="https://huggingface.co/datasets/gydou/DeonticBench"><img src="assets/hf-logo.png" alt="Hugging Face" height="18" align="absmiddle"> <b>Dataset</b></a>
+</p>
 
 ## News
 
 - **2026-05-26** — Reference Prolog programs across all five domains (SARA Numeric, SARA Binary, Airline, Housing, USCIS-AAO) have been audited and corrected. Programs with flawed legal reasoning, trivially true logic, or hardcoded outputs were identified and rewritten. The updated dataset is now live on [Hugging Face](https://huggingface.co/datasets/gydou/DeonticBench).
+
+<br>
 
 <p align="center">
   <img src="assets/deontic_bench_main_plot.png" alt="DeonticBench overview" width="90%">
